@@ -11,4 +11,6 @@ public interface UserPort {
     Optional<UserSignUpTO> findById(Long id);
 
     Optional<UserSignUpTO> findByEmail(String email);
+
+    Optional<User> findByEmail2(String email);
 }

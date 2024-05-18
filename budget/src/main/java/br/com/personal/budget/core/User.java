@@ -1,5 +1,6 @@
 package br.com.personal.budget.core;
 
+import br.com.personal.budget.usecase.exception.SignInException;
 import jakarta.annotation.Nonnull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -8,17 +9,16 @@ public class User {
     private final String name;
     private final String email;
     private final String pwd;
-    private final String pwdEncode;
+
 
     public User(@Nonnull String name, @Nonnull String email, @Nonnull String pwd) {
         this.name = name;
         this.email = email;
         this.pwd = pwd;
-        this.pwdEncode = encode();
     }
 
-    private String encode() {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+    public String encode() {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
         return encoder.encode(pwd);
     }
 
@@ -30,7 +30,13 @@ public class User {
         return email;
     }
 
-    public String getPwdEncode() {
-        return pwdEncode;
+    public void matches(String pwd) throws SignInException {
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+        boolean matches = encoder.matches(pwd, this.pwd);
+        if (!matches) {
+            throw new SignInException("Password invalid!");
+        }
     }
+
 }

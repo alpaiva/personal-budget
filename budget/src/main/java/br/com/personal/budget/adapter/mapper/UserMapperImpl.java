@@ -22,4 +22,9 @@ public class UserMapperImpl implements UserMapper {
     public UserSignUpTO map(UserEntity userEntity) {
         return new UserSignUpTO(userEntity.getName(), userEntity.getEmail());
     }
+
+    @Override
+    public User map2(UserEntity userEntity) {
+        return new User(userEntity.getName(), userEntity.getEmail(), userEntity.getPwd());
+    }
 }

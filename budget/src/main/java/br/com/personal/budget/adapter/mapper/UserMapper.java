@@ -11,4 +11,6 @@ public interface UserMapper {
     User map(UserSignUpPwdTO userSignUp);
 
     UserSignUpTO map(UserEntity userEntity);
+
+    User map2(UserEntity userEntity);
 }

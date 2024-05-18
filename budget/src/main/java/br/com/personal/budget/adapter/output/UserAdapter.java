@@ -24,7 +24,7 @@ public class UserAdapter implements UserPort {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(user.getEmail());
         userEntity.setName(user.getName());
-        userEntity.setPwd(user.getPwdEncode());
+        userEntity.setPwd(user.encode());
         userRepository.save(userEntity);
         return user;
     }
@@ -41,5 +41,12 @@ public class UserAdapter implements UserPort {
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
 
         return userEntity.map(userMapper::map);
+    }
+
+    @Override
+    public Optional<User> findByEmail2(String email) {
+        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+
+        return userEntity.map(userMapper::map2);
     }
 }
