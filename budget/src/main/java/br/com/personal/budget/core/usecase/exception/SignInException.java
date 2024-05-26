@@ -1,4 +1,4 @@
-package br.com.personal.budget.usecase.exception;
+package br.com.personal.budget.core.usecase.exception;
 
 public class SignInException extends Exception {
 

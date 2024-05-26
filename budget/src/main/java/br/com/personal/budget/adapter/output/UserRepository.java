@@ -1,6 +1,6 @@
 package br.com.personal.budget.adapter.output;
 
-import br.com.personal.budget.database.UserEntity;
+import br.com.personal.budget.adapter.output.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

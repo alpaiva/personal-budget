@@ -1,51 +1,51 @@
 package br.com.personal.budget.auth;
 
-import br.com.personal.budget.adapter.output.UserRepository;
-import br.com.personal.budget.database.UserEntity;
-import br.com.personal.budget.usecase.exception.BudgetBadRequest;
-import br.com.personal.budget.usecase.exception.SignInException;
+import br.com.personal.budget.core.domain.User;
+import br.com.personal.budget.core.usecase.exception.SignInException;
+import br.com.personal.budget.core.usecase.exception.UserException;
+import br.com.personal.budget.core.usecase.port.UserPort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Component
+@Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final UserRepository userRepository;
+    private final UserPort userPort;
 
-    public AuthenticationServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private static final String MSG_ERROR = "Email or password invalid!";
+
+    public AuthenticationServiceImpl(UserPort userPort) {
+        this.userPort = userPort;
     }
 
     @Override
     public String signIn(String email, String pwd) throws SignInException {
-        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+        Optional<User> userOpt = userPort.findByEmail(email);
         if (userOpt.isEmpty()) {
             throw new SignInException("Email not found.");
         }
 
-        UserEntity user = userOpt.get();
+        User user = userOpt.get();
         matches(pwd, user.getPwd());
 
         return "TOKEN";
     }
 
     @Override
-    public void signUp(String name, String email, String pwd) {
+    public User signUp(User user) {
         // checks duplicate
-        Optional<UserEntity> userOpt = userRepository.findByEmail(email);
+        Optional<User> userOpt = userPort.findByEmail(user.getEmail());
         if (userOpt.isPresent()) {
-            throw new BudgetBadRequest();
+            throw new UserException(MSG_ERROR);
         }
 
-        UserEntity user = new UserEntity();
-        user.setPwd(encode(pwd));
-        user.setName(name);
-        user.setEmail(email);
+        User userToSave = user.toBuilder()
+                .pwd(encode(user.getPwd()))
+                .build();
 
-        userRepository.save(user);
-
+        return userPort.save(userToSave);
     }
 
     private void matches(String pwd, String userPwd) throws SignInException {
@@ -53,7 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
         boolean matches = encoder.matches(pwd, userPwd);
         if (!matches) {
-            throw new SignInException("Password invalid!");
+            throw new SignInException(MSG_ERROR);
         }
     }
 

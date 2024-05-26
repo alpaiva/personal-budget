@@ -1,4 +1,4 @@
-package br.com.personal.budget.database;
+package br.com.personal.budget.adapter.output.entity;
 
 import jakarta.persistence.*;
 

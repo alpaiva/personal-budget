@@ -1,4 +1,4 @@
-package br.com.personal.budget.database;
+package br.com.personal.budget.adapter.output.entity;
 
 import jakarta.persistence.*;
 
@@ -20,6 +20,7 @@ public class TransactionEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
     @Column(name = "transaction_date")
