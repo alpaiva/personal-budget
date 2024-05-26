@@ -14,10 +14,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserPort userPort;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     private static final String MSG_ERROR = "Email or password invalid!";
 
-    public AuthenticationServiceImpl(UserPort userPort) {
+    public AuthenticationServiceImpl(UserPort userPort, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userPort = userPort;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -49,16 +52,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void matches(String pwd, String userPwd) throws SignInException {
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
-        boolean matches = encoder.matches(pwd, userPwd);
+        boolean matches = bCryptPasswordEncoder.matches(pwd, userPwd);
         if (!matches) {
             throw new SignInException(MSG_ERROR);
         }
     }
 
     private String encode(String pwd) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
-        return encoder.encode(pwd);
+        return bCryptPasswordEncoder.encode(pwd);
     }
 }
