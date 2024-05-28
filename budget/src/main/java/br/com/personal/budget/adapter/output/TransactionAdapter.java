@@ -43,7 +43,8 @@ public class TransactionAdapter implements TransactionPort {
 
     @Override
     public Optional<Transaction> findById(Long id) {
-        return Optional.empty();
+        return transactionRepository.findById(id)
+                .map(transactionMapper::map);
     }
 
     @Override

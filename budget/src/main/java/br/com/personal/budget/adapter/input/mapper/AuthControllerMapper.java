@@ -2,11 +2,11 @@ package br.com.personal.budget.adapter.input.mapper;
 
 import br.com.personal.budget.adapter.input.to.UserSignUpTO;
 import br.com.personal.budget.adapter.input.to.UserTO;
-import br.com.personal.budget.core.domain.User;
+import br.com.personal.budget.auth.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthenticationMapper {
+public class AuthControllerMapper {
 
     public User mapToUser(UserSignUpTO dto) {
         return User.builder()
@@ -16,8 +16,8 @@ public class AuthenticationMapper {
                 .build();
     }
 
-    public UserTO mapToDTO(User userSaved) {
-
-        return new UserTO(userSaved.getName(), userSaved.getEmail());
+    public UserTO mapTO(User user) {
+        return new UserTO(user.getName(), user.getEmail());
     }
+
 }

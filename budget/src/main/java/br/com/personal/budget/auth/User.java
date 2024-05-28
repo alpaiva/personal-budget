@@ -1,6 +1,6 @@
-package br.com.personal.budget.core.domain;
+package br.com.personal.budget.auth;
 
-import br.com.personal.budget.core.usecase.exception.UserException;
+import br.com.personal.budget.auth.UserException;
 import lombok.Builder;
 import lombok.Getter;
 

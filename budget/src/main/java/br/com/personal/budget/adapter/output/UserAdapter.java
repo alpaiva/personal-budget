@@ -2,14 +2,13 @@ package br.com.personal.budget.adapter.output;
 
 import br.com.personal.budget.adapter.output.entity.UserEntity;
 import br.com.personal.budget.adapter.output.mapper.UserMapper;
-import br.com.personal.budget.core.domain.User;
-import br.com.personal.budget.core.usecase.port.UserPort;
+import br.com.personal.budget.auth.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class UserAdapter implements UserPort {
+public class UserAdapter  {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -19,7 +18,7 @@ public class UserAdapter implements UserPort {
         this.userMapper = userMapper;
     }
 
-    @Override
+
     public User save(User user) {
 
         UserEntity userEntity = userMapper.mapToEntity(user);
@@ -29,14 +28,14 @@ public class UserAdapter implements UserPort {
         return userMapper.mapToUser(save);
     }
 
-    @Override
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::mapToUser);
 
     }
 
-    @Override
+
     public Optional<User> findById(Long userId) {
         return userRepository.findById(userId)
                 .map(userMapper::mapToUser);
