@@ -1,6 +1,5 @@
 package br.com.personal.budget.auth;
 
-import br.com.personal.budget.auth.UserException;
 import lombok.Builder;
 import lombok.Getter;
 
