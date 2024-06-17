@@ -88,4 +88,12 @@ public class UserInfoService implements UserDetailsService {
     private String encode(String pwd) {
         return passwordEncoder.encode(pwd);
     }
+
+    public Long getUserId(String username) {
+        Optional<User> userOpt = userAdapter.findByEmail(username);
+
+        User user = userOpt.orElseThrow(() -> new UserException(MSG_ERROR));
+
+        return user.getId();
+    }
 }

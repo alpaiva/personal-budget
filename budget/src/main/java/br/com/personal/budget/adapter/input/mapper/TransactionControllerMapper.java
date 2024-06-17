@@ -2,16 +2,17 @@ package br.com.personal.budget.adapter.input.mapper;
 
 import br.com.personal.budget.adapter.input.to.TransactionPatchTO;
 import br.com.personal.budget.adapter.input.to.TransactionTO;
+import br.com.personal.budget.auth.UserInfoDetails;
 import br.com.personal.budget.core.domain.Transaction;
 import br.com.personal.budget.core.domain.TransactionType;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TransactionControllerMapper {
-    public Transaction map(TransactionTO transactionTO) {
+    public Transaction map(TransactionTO transactionTO, Long userId) {
 
         return Transaction.builder()
-                .userId(transactionTO.userId())
+                .userId(userId)
                 .transactionDate(transactionTO.transactionDate())
                 .amount(transactionTO.amount())
                 .memo(transactionTO.memo())

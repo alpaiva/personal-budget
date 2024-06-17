@@ -28,12 +28,8 @@ public class UserAdapter  {
         return userMapper.mapToUser(save);
     }
 
-
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::mapToUser);
-
     }
-
-
 }

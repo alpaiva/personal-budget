@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -66,5 +67,16 @@ public class JwtService {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) &&
         !isTokenExpired(token));
+    }
+
+    public String getUserEmailFromToken(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        String token;
+        String username = null;
+        if (authorization != null && authorization.startsWith("Bearer")) {
+            token = authorization.substring(7);
+            username = extractUsername(token);
+        }
+        return username;
     }
 }

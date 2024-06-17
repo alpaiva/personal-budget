@@ -15,11 +15,12 @@ public class UserMapper {
         return userEntity;
     }
 
-    public User mapToUser(UserEntity save) {
+    public User mapToUser(UserEntity entity) {
         return User.builder()
-                .name(save.getName())
-                .email(save.getEmail())
-                .pwd(save.getPwd())
+                .name(entity.getName())
+                .email(entity.getEmail())
+                .pwd(entity.getPwd())
+                .id(entity.getId())
                 .build();
     }
 }

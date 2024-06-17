@@ -2,30 +2,23 @@ package br.com.personal.budget.auth;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Builder(toBuilder = true)
 @Getter
 public class User {
 
+    private final Long id;
     private final String name;
     private final String email;
     private final String pwd;
 
     @Builder
-    User(String name, String email, String pwd) {
-        if (name == null) {
-            throw new UserException("User name can't be null.");
-        }
-        if (email == null) {
-            throw new UserException("Email can't be null.");
-        }
-        if (pwd == null) {
-            throw new UserException("Password can't be null.");
-        }
+    User(Long id, String name, String email, String pwd) {
         this.name = name;
         this.email = email;
         this.pwd = pwd;
-
+        this.id = id;
     }
 
 }
