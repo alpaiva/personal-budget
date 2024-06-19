@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction</title>
+</head>
+<body>
+    <main>
+        <div>
+            <form id="form-transaction">
+                <label for="transactionDate">Data</label>
+                <input name="transactionDate" type="date"/>
+                <label for="amount">Valor</label>
+                <input name="amount" type="number" step="any"/>
+                <label for="type">Tipo</label>
+                <input name="type" type="text"/>
+                <label for="memo">Memo</label>
+                <input name="memo" type="text"/>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </main>
+</body>
+<script>
+
+    const transaction = function (event) {
+        event.preventDefault()
+
+        const form = event.target
+        const formData = new FormData(form)
+        const data = {};
+        formData.forEach((key, value) => data[value] = key)
+        
+        const json = JSON.stringify(data)
+
+        fetch('https://localhost:9002/transaction', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmdXNjYUBlbWFpbC5jb20iLCJpYXQiOjE3MTg1OTA0MTIsImV4cCI6MTcxODU5MjIxMn0.T--cJhZerx9L9rt4BLH9QMKnd9syG3EEjIq6pvOeCtQ'
+            },
+            body: json
+        })
+        .then(response => console.log(response))
+        .catch(error => {
+            console.error(error)
+        })
+    }
+
+    document
+    .getElementById("form-transaction")
+    .addEventListener('submit', transaction)
+</script>
+</html>
