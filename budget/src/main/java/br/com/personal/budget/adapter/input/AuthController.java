@@ -7,6 +7,8 @@ import br.com.personal.budget.adapter.input.to.UserTO;
 import br.com.personal.budget.auth.JwtService;
 import br.com.personal.budget.auth.User;
 import br.com.personal.budget.auth.UserInfoService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,14 +39,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody(required = true) UserPwdTO userPwdTO) {
+    public ResponseEntity<String> login(@RequestBody(required = true) UserPwdTO userPwdTO, HttpServletResponse response) {
 
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userPwdTO.email(), userPwdTO.pwd()));
 
         if (authenticate.isAuthenticated()) {
             String token = jwtService.generateToken(userPwdTO.email());
-            return ResponseEntity.ok().body(token);
+            Cookie cookie = new Cookie("Bearer", token);
+            cookie.setHttpOnly(true);
+            cookie.setAttribute("sameSite", "strict");
+            cookie.setSecure(true);
+            response.addCookie(cookie);
+            return ResponseEntity.ok().body("Login");
         }
 
         throw new UsernameNotFoundException("Invalid user");
