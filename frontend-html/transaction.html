@@ -23,7 +23,20 @@
     </main>
 </body>
 <script>
-
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
     const transaction = function (event) {
         event.preventDefault()
 
@@ -34,15 +47,19 @@
         
         const json = JSON.stringify(data)
 
+        const token = getCookie('token')
+        const auth = `Bearer ${token}`
+        
+
         fetch('https://localhost:9002/transaction', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmdXNjYUBlbWFpbC5jb20iLCJpYXQiOjE3MTg1OTA0MTIsImV4cCI6MTcxODU5MjIxMn0.T--cJhZerx9L9rt4BLH9QMKnd9syG3EEjIq6pvOeCtQ'
+                'Authorization': auth
             },
             body: json
         })
-        .then(response => console.log(response))
+        .then(response => console.log(response.status))
         .catch(error => {
             console.error(error)
         })

@@ -19,6 +19,12 @@
     </main>
 </body>
 <script>
+    const setCookie = (cname, cvalue, exdays) => {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
 
     const signin = function (event) {
         event.preventDefault()
@@ -37,7 +43,8 @@
             },
             body: json
         })
-        .then(response => console.log(response))
+        .then(response => response.json())
+        .then(json => setCookie('token', json.token, 1))
         .catch(error => {
             console.error(error)
         })
