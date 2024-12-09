@@ -2,10 +2,13 @@ package br.com.personal.budget.adapter.output;
 
 import br.com.personal.budget.adapter.output.entity.TransactionEntity;
 import br.com.personal.budget.adapter.output.entity.UserEntity;
-import br.com.personal.budget.adapter.output.mapper.TransactionMapper;
+
 import br.com.personal.budget.core.domain.Transaction;
 import br.com.personal.budget.core.usecase.exception.TransactionException;
 import br.com.personal.budget.core.usecase.port.TransactionPort;
+import br.com.personal.budget.mapper.TransactionMapper;
+import br.com.personal.budget.repository.TransactionRepository;
+import br.com.personal.budget.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

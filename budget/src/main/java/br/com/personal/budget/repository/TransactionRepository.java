@@ -1,4 +1,4 @@
-package br.com.personal.budget.adapter.output;
+package br.com.personal.budget.repository;
 
 import br.com.personal.budget.adapter.output.entity.TransactionEntity;
 import org.springframework.data.repository.CrudRepository;

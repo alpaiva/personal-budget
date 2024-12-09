@@ -1,10 +1,13 @@
-package br.com.personal.budget.adapter.input;
+package br.com.personal.budget.controller;
 
-import br.com.personal.budget.adapter.input.mapper.TransactionControllerMapper;
 import br.com.personal.budget.adapter.input.to.TransactionPatchTO;
 import br.com.personal.budget.adapter.input.to.TransactionTO;
+import br.com.personal.budget.auth.JwtService;
+import br.com.personal.budget.auth.UserInfoService;
 import br.com.personal.budget.core.domain.Transaction;
 import br.com.personal.budget.core.usecase.TransactionUseCase;
+import br.com.personal.budget.mapper.TransactionMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,31 +19,43 @@ public class TransactionController {
 
     private final TransactionUseCase transactionUseCase;
 
-    private final TransactionControllerMapper transactionControllerMapper;
+    private final TransactionMapper mapper;
 
-    public TransactionController(TransactionUseCase transactionUseCase, TransactionControllerMapper transactionControllerMapper) {
+    private final JwtService jwtService;
+    private final UserInfoService userInfoService;
+
+    public TransactionController(TransactionUseCase transactionUseCase,
+                                 TransactionMapper mapper,
+                                 JwtService jwtService,
+                                 UserInfoService userInfoService) {
         this.transactionUseCase = transactionUseCase;
-        this.transactionControllerMapper = transactionControllerMapper;
+        this.mapper = mapper;
+        this.jwtService = jwtService;
+        this.userInfoService = userInfoService;
     }
 
     @GetMapping("/transaction/{id}")
     public ResponseEntity<TransactionTO> getTransaction(@PathVariable(value = "id") Long id) {
         Optional<Transaction> transaction = transactionUseCase.findById(id);
         if (transaction.isPresent()) {
-            TransactionTO transactionDto = transactionControllerMapper.mapToDTO(transaction.get());
+            TransactionTO transactionDto = mapper.mapToDTO(transaction.get());
             return ResponseEntity.ok().body(transactionDto);
         }
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/transaction")
-    public ResponseEntity<TransactionTO> post(@RequestBody(required = true) TransactionTO transactionTO) {
+    public ResponseEntity<TransactionTO> post(HttpServletRequest request, @RequestBody(required = true) TransactionTO transactionTO) {
 
-        Transaction transaction = transactionControllerMapper.map(transactionTO);
+        String userEmail = jwtService.getUserEmailFromToken(request);
+
+        Long userId = userInfoService.getUserId(userEmail);
+
+        Transaction transaction = mapper.map(transactionTO, userId);
 
         Transaction transactionSaved = transactionUseCase.save(transaction);
 
-        TransactionTO transactionDto = transactionControllerMapper.mapToDTO(transactionSaved);
+        TransactionTO transactionDto = mapper.mapToDTO(transactionSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionDto);
     }
@@ -48,11 +63,11 @@ public class TransactionController {
     @PatchMapping("/transaction")
     public ResponseEntity<TransactionTO> patch(@RequestBody(required = true) TransactionPatchTO transactionTO) {
 
-        Transaction transaction = transactionControllerMapper.map(transactionTO);
+        Transaction transaction = mapper.map(transactionTO);
 
         Transaction transactionSaved = transactionUseCase.patch(transaction);
 
-        TransactionTO transactionDto = transactionControllerMapper.mapToDTO(transactionSaved);
+        TransactionTO transactionDto = mapper.mapToDTO(transactionSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionDto);
     }

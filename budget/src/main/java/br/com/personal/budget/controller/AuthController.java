@@ -1,12 +1,13 @@
-package br.com.personal.budget.adapter.input;
+package br.com.personal.budget.controller;
 
-import br.com.personal.budget.adapter.input.mapper.AuthControllerMapper;
+import br.com.personal.budget.adapter.input.to.TokenTO;
 import br.com.personal.budget.adapter.input.to.UserPwdTO;
 import br.com.personal.budget.adapter.input.to.UserSignUpTO;
 import br.com.personal.budget.adapter.input.to.UserTO;
 import br.com.personal.budget.auth.JwtService;
 import br.com.personal.budget.auth.User;
 import br.com.personal.budget.auth.UserInfoService;
+import br.com.personal.budget.mapper.UserMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController {
 
-    private final AuthControllerMapper mapper;
+    private final UserMapper mapper;
     private final AuthenticationManager authenticationManager;
     private final UserInfoService userInfoService;
     private final JwtService jwtService;
 
     public AuthController(
-            AuthControllerMapper mapper,
+            UserMapper mapper,
             AuthenticationManager authenticationManager,
             UserInfoService userInfoService,
             JwtService jwtService) {
@@ -37,14 +38,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody(required = true) UserPwdTO userPwdTO) {
+    public ResponseEntity<TokenTO> login(@RequestBody(required = true) UserPwdTO userPwdTO) {
 
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userPwdTO.email(), userPwdTO.pwd()));
 
         if (authenticate.isAuthenticated()) {
             String token = jwtService.generateToken(userPwdTO.email());
-            return ResponseEntity.ok().body(token);
+
+            return ResponseEntity.ok().body(new TokenTO(token));
         }
 
         throw new UsernameNotFoundException("Invalid user");

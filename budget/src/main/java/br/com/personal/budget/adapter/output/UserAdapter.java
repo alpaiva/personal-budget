@@ -1,8 +1,10 @@
 package br.com.personal.budget.adapter.output;
 
 import br.com.personal.budget.adapter.output.entity.UserEntity;
-import br.com.personal.budget.adapter.output.mapper.UserMapper;
+
 import br.com.personal.budget.auth.User;
+import br.com.personal.budget.mapper.UserMapper;
+import br.com.personal.budget.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -28,12 +30,8 @@ public class UserAdapter  {
         return userMapper.mapToUser(save);
     }
 
-
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::mapToUser);
-
     }
-
-
 }
